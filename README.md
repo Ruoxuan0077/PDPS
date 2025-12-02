@@ -27,6 +27,19 @@ PDPS/
 
 ---
 
+## Pretrained Models
+
+**EDM Prior (required for all methods):**
+```bash
+wget https://nvlabs-fi-cdn.nvidia.com/edm/pretrained/edm-ffhq-64x64-uncond-ve.pkl -P data/nn/edm/
+```
+
+**Nonlinear blur model (required for nonlinear_deblur task):**
+- Download: [GOPRO_wVAE.pth](https://drive.google.com/file/d/1vRoDpIsrTRYZKsOMPNbPcMtFDpCT6Foy/view?usp=drive_link)
+- Place at: `src/likelihood/utils/bkse/experiments/pretrained/GOPRO_wVAE.pth`
+
+---
+
 ## Quick Start
 
 **Requirements:**

@@ -16,7 +16,7 @@ TASKS = {
     # 'inpainting':     {'operator': {'name': 'inpainting', 'mask_ratio': 0.9, 'img_size': 64}},
 }
 
-DEFAULT_PRIOR = {'name': 'edm', 'model_path': 'data/nn/edm/edm_ffhq64_ve.pkl', 'sigma_ve': 0.09, 'sigma_final': 0.03}
+DEFAULT_PRIOR = {'name': 'edm', 'model_path': 'data/nn/edm/edm-ffhq-64x64-uncond-ve.pkl', 'sigma_ve': 0.09, 'sigma_final': 0.03}
 DEFAULT_LIKELIHOOD = {'name': 'gaussian', 'sigma': 0.05}
 
 

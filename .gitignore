@@ -47,6 +47,6 @@ fig/
 *~
 .DS_Store
 
-data/nn/edm/edm_ffhq64_ve.pkl
+data/nn/edm/edm-ffhq-64x64-uncond-ve.pkl
 src/likelihood/utils/bkse/experiments/pretrained/GOPRO_wVAE.pth
 
