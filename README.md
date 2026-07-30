@@ -2,7 +2,13 @@
 
 This repo contains the official implementation for the paper [Provable Diffusion Posterior Sampling for Bayesian Inversion](https://arxiv.org/abs/2512.08022)
 
-by Yang Song, Jascha Sohl-Dickstein, Diederik P. Kingma, Abhishek Kumar, Stefano Ermon, and Ben Poole
+by [Jinyuan Chang](https://sites.google.com/site/bryanchangjinyuan/), [Chenguang Duan](https://chenguangduan.github.io), [Yuling Jiao](https://jszy.whu.edu.cn/jiaoyuling/en/index.htm), Ruoxuan Li, Jerry Zhijian Yang, [Cheng Yuan](https://scholar.google.com/citations?user=UFL4YUwAAAAJ&hl=en)
+
+--------------------
+
+We propose a novel diffusion-based posterior sampling method within a plug-and-play (PnP) framework. Our approach constructs a probability transport from an easy-to-sample terminal distribution to the target posterior, using a warm-start strategy to initialize the particles. To approximate the posterior score, we develop a Monte Carlo estimator in which particles are generated using Langevin dynamics, avoiding the heuristic approximations commonly used in prior work. The score governing the Langevin dynamics is learned from data, enabling the model to capture rich structural features of the underlying prior distribution. 
+
+(please add experimental results here, figures and tables)
 
 **Methods:**
 - **PDPS**: Provable Diffusion Posterior Sampling for Bayesian Inversion
@@ -190,3 +196,15 @@ Three files required:
 3. `new_method.py` - Entry script
 
 Register in `configs/__init__.py` and `src/samplers/__init__.py`.
+
+
+```
+@misc{chang2025provable,
+title={Provable Diffusion Posterior Sampling for {B}ayesian Inversion}, 
+author={Jinyuan Chang and Chenguang Duan and Yuling Jiao and Ruoxuan Li and Jerry Zhijian Yang and Cheng Yuan},
+year={2025},
+note={arXiv:2512.08022},
+url={https://arxiv.org/abs/2512.08022}, 
+}
+```
+
