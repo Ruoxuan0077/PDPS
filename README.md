@@ -198,7 +198,11 @@ Three files required:
 Register in `configs/__init__.py` and `src/samplers/__init__.py`.
 
 
-```
+
+## References
+
+If you find the code useful for your research, please consider citing
+```bib
 @misc{chang2025provable,
 title={Provable Diffusion Posterior Sampling for {B}ayesian Inversion}, 
 author={Jinyuan Chang and Chenguang Duan and Yuling Jiao and Ruoxuan Li and Jerry Zhijian Yang and Cheng Yuan},
@@ -207,4 +211,11 @@ note={arXiv:2512.08022},
 url={https://arxiv.org/abs/2512.08022}, 
 }
 ```
+
+This work is built upon some previous papers which might also interest you:
+
+* dps.
+* deepinverse.
+* slips.
+* edm.
 
