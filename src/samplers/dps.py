@@ -118,6 +118,7 @@ class DPSSampler(BaseSampler):
             model=self._noise_predictor,  # ← Use DPS-specific noise predictor
             measurement_cond_fn=measurement_cond_fn
         )
+        progress_context = kwargs.get('progress_context')
         
         # Sample for each image
         samples = []
@@ -128,8 +129,41 @@ class DPSSampler(BaseSampler):
                 x_start=x_start,
                 measurement=y_i,
                 record=False,
-                save_root=None
+                save_root=None,
+                progress_desc=self._progress_description(
+                    i,
+                    y.shape[0],
+                    progress_context,
+                ),
             )
             samples.append(sample)
         
         return torch.cat(samples, dim=0)
+
+    @staticmethod
+    def _progress_description(local_index, total, context):
+        """Describe one inherited DPS reverse loop without changing its use."""
+        if not isinstance(context, dict):
+            return f"DPS item {local_index + 1}/{total}"
+
+        start_idx = int(context.get('start_idx', 0))
+        mode = context.get('mode')
+        if mode == 'single':
+            global_index = start_idx + local_index
+            total_samples = int(context.get('total_samples', total))
+            return (
+                f"DPS sample {global_index + 1}/{total_samples}"
+            )
+
+        if mode == 'batch':
+            batch_size = int(context.get('batch_size', total))
+            num_samples = int(context.get('num_samples', 1))
+            if batch_size > 0 and num_samples > 0:
+                image_index = start_idx + local_index % batch_size
+                sample_index = local_index // batch_size
+                return (
+                    f"DPS image {image_index:03d}, "
+                    f"sample {sample_index + 1}/{num_samples}"
+                )
+
+        return f"DPS item {local_index + 1}/{total}"

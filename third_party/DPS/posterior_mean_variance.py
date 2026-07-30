@@ -162,10 +162,13 @@ class FixedSmallVarianceProcessor(VarianceProcessor):
         self.posterior_variance = (
             betas * (1.0 - alphas_cumprod_prev) / (1.0 - alphas_cumprod)
         )
+        self.posterior_log_variance_clipped = np.log(
+            np.append(self.posterior_variance[1], self.posterior_variance[1:])
+        )
 
     def get_variance(self, x, t):
         model_variance = self.posterior_variance
-        model_log_variance = np.log(model_variance)
+        model_log_variance = self.posterior_log_variance_clipped
 
         model_variance = extract_and_expand(model_variance, t, x)
         model_log_variance = extract_and_expand(model_log_variance, t, x)

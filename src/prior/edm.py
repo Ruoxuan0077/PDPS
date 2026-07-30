@@ -35,6 +35,7 @@ class EDMPrior:
         with open(model_path, 'rb') as f:
             self.network = pickle.load(f)['ema'].to(device)
             self.network.eval()
+            self.network.requires_grad_(False)
     
     def score_fn(self, x, sigma=None):
         """

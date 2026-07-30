@@ -1,11 +1,18 @@
 """
 Sampler module for different sampling methods.
-Provides unified interface for PDPS and DPS algorithms.
+Provides a unified interface for PDPS, DPS, and TV algorithms.
 """
 from .base import BaseSampler
 from .pdps import PDPSSampler
 from .dps import DPSSampler
-from .pnp_flow import PnPFlowSampler
+from .tv import TVSampler
+
+
+SAMPLERS = {
+    'pdps': PDPSSampler,
+    'dps': DPSSampler,
+    'tv': TVSampler,
+}
 
 
 def create_sampler(config, device):
@@ -19,17 +26,20 @@ def create_sampler(config, device):
     Returns:
         Sampler instance (PDPS, DPS, ...)
     """
-    samplers = {
-        'pdps': PDPSSampler,
-        'dps': DPSSampler,
-        'pnp_flow': PnPFlowSampler,
-    }
+    if config.method_name not in SAMPLERS:
+        raise ValueError(
+            f"Unknown method: {config.method_name}. "
+            f"Choose from {list(SAMPLERS)}"
+        )
     
-    if config.method_name not in samplers:
-        raise ValueError(f"Unknown method: {config.method_name}. Choose from {list(samplers.keys())}")
-    
-    return samplers[config.method_name](config, device)
+    return SAMPLERS[config.method_name](config, device)
 
 
-__all__ = ['BaseSampler', 'PDPSSampler', 'DPSSampler', 'PnPFlowSampler', 'create_sampler']
-
+__all__ = [
+    'BaseSampler',
+    'PDPSSampler',
+    'DPSSampler',
+    'TVSampler',
+    'SAMPLERS',
+    'create_sampler',
+]

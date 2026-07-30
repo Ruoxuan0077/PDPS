@@ -10,7 +10,7 @@ import math
 
 
 class PDPSSampler(BaseSampler):
-    """PDPS (Posterior Diffusion Posterior Sampling) algorithm."""
+    """PDPS (Provable Diffusion Posterior Sampling) algorithm."""
     
     def __init__(self, config, device):
         """
@@ -46,7 +46,8 @@ class PDPSSampler(BaseSampler):
         x_samples = self._pdps_sampling(x, y, likelihood.likelihood_fn)
         
         # Denoise samples before returning
-        x_final = self.denoiser_fn(x_samples)
+        with torch.no_grad():
+            x_final = self.denoiser_fn(x_samples)
         
         return x_final
     
@@ -102,7 +103,7 @@ class PDPSSampler(BaseSampler):
         start_time = time.time()
         delta = torch.tensor((T - T0) / diff_steps, device=self.device)
         
-        for i in range(diff_steps - 1):
+        for i in range(diff_steps):
             t = T - i * delta
             score, z0 = self._score_estimation(
                 t, x, y, self.prior_fn, likelihood_fn, in_steps_diff,
@@ -167,14 +168,19 @@ class PDPSSampler(BaseSampler):
         
         # Posterior score function
         def posterior_score(x0):
-            prior_score = prior_score_fn(x0)
+            # PDPS only needs the prior score value. Keep this local: DPS
+            # differentiates through the same EDM prior for its guidance.
+            with torch.no_grad():
+                prior_score = prior_score_fn(x0)
             posterior = prior_score + mu * (xt - mu * x0) / sigma2
             posterior += likelihood_fn(x0, y_expanded)
             return posterior
         
         # Inner ULA MCMC
         z_temp = z0
-        z_traj = torch.empty((steps, *z0.shape), device=device)
+        num_retained = int(burn_frac * steps)
+        retained_start = steps - num_retained
+        z_tail = torch.empty((num_retained, *z0.shape), device=device)
         
         for i in range(steps):
             score = posterior_score(z_temp)
@@ -182,15 +188,15 @@ class PDPSSampler(BaseSampler):
             eps = self._tamed_stepsize(score, noise, snr)
             dz = eps * score + torch.sqrt(2 * eps) * noise
             z_temp = z_temp + dz
-            z_traj[i] = z_temp.clone()
+            if i >= retained_start:
+                z_tail[i - retained_start] = z_temp.clone()
         
         # Burn-in and averaging
-        num_retained = int(burn_frac * steps)
-        z_mc = z_traj[-num_retained:]  # (num_retained, mc_chains * B, C, H, W)
+        z_mc = z_tail  # (num_retained, mc_chains * B, C, H, W)
         z_mc = z_mc.view((num_retained * mc_chains, -1, *x.shape[1:]))
         
         # Final state for next iteration
-        z_final = z_traj[-1].view((mc_chains, -1, *x.shape[1:]))
+        z_final = z_tail[-1].view((mc_chains, -1, *x.shape[1:]))
         
         # Score estimate
         denoiser = z_mc.mean(dim=0)

@@ -2,7 +2,6 @@
 Base sampler interface.
 All sampling methods must implement this interface.
 """
-import torch
 
 
 class BaseSampler:
@@ -27,7 +26,7 @@ class BaseSampler:
         Execute sampling algorithm and return final usable results.
         
         Args:
-            x: initial samples [B, C, H, W]
+            x: initial samples or reconstruction-shape template [B, C, H, W]
             y: measurements [B, C, H, W]
             **kwargs: additional arguments (likelihood, etc.)
         
@@ -35,5 +34,3 @@ class BaseSampler:
             Final samples [B, C, H, W] ready to use (fully processed)
         """
         raise NotImplementedError("Subclass must implement sample()")
-
-

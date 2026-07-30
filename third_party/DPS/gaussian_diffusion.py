@@ -71,6 +71,7 @@ class GaussianDiffusion:
 
         self.num_timesteps = int(self.betas.shape[0])
         self.rescale_timesteps = rescale_timesteps
+        self.model_var_type = model_var_type
 
         alphas = 1.0 - self.betas
         self.alphas_cumprod = np.cumprod(alphas, axis=0)
@@ -173,14 +174,19 @@ class GaussianDiffusion:
                       measurement,
                       measurement_cond_fn,
                       record,
-                      save_root):
+                      save_root,
+                      progress_desc=None):
         """
         The function used for sampling from noise.
         """ 
         img = x_start
         device = x_start.device
 
-        pbar = tqdm(list(range(self.num_timesteps))[::-1])
+        pbar = tqdm(
+            list(range(self.num_timesteps))[::-1],
+            desc=progress_desc or 'DPS reverse diffusion',
+            mininterval=1.0,
+        )
         for idx in pbar:
             time = torch.tensor([idx] * img.shape[0], device=device)
             
@@ -211,14 +217,24 @@ class GaussianDiffusion:
 
     def p_mean_variance(self, model, x, t):
         model_output = model(x, self._scale_timesteps(t))
-        
-        # In the case of "learned" variance, model will give twice channels.
-        if model_output.shape[1] == 2 * x.shape[1]:
+
+        channels = x.shape[1]
+        if self.model_var_type in ('learned', 'learned_range'):
+            expected_channels = 2 * channels
+            if model_output.shape[1] != expected_channels:
+                raise ValueError(
+                    f"{self.model_var_type} variance requires model output with "
+                    f"{expected_channels} channels (mean and variance), got "
+                    f"{model_output.shape[1]}"
+                )
             model_output, model_var_values = torch.split(model_output, x.shape[1], dim=1)
         else:
-            # The name of variable is wrong. 
-            # This will just provide shape information, and 
-            # will not be used for calculating something important in variance.
+            if model_output.shape[1] != channels:
+                raise ValueError(
+                    f"{self.model_var_type} variance requires model output with "
+                    f"{channels} channels, got {model_output.shape[1]}"
+                )
+            # Fixed variance processors use this only as a shape/device template.
             model_var_values = model_output
 
         model_mean, pred_xstart = self.mean_processor.get_mean_and_xstart(x, t, model_output)
