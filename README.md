@@ -1,6 +1,6 @@
 # Provable Diffusion Posterior Sampling for Bayesian Inversion
 
-This repo contains the official implementation for the paper [Provable Diffusion Posterior Sampling for Bayesian Inversion](https://arxiv.org/abs/2512.08022)
+This repo contains the official implementation for the paper [Provable Diffusion Posterior Sampling for Bayesian Inversion](https://arxiv.org/abs/2512.08022).
 
 by [Jinyuan Chang](https://sites.google.com/site/bryanchangjinyuan/), [Chenguang Duan](https://chenguangduan.github.io), [Yuling Jiao](https://jszy.whu.edu.cn/jiaoyuling/en/index.htm), Ruoxuan Li, Jerry Zhijian Yang, [Cheng Yuan](https://scholar.google.com/citations?user=UFL4YUwAAAAJ&hl=en)
 
