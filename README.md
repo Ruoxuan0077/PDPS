@@ -1,7 +1,8 @@
-# PDPS
+# Provable Diffusion Posterior Sampling for Bayesian Inversion
 
-Modular implementation of sampling and reconstruction methods for image inverse
-problems.
+This repo contains the official implementation for the paper [Provable Diffusion Posterior Sampling for Bayesian Inversion](https://arxiv.org/abs/2512.08022)
+
+by Yang Song, Jascha Sohl-Dickstein, Diederik P. Kingma, Abhishek Kumar, Stefano Ermon, and Ben Poole
 
 **Methods:**
 - **PDPS**: Provable Diffusion Posterior Sampling for Bayesian Inversion
