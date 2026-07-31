@@ -93,11 +93,15 @@ Each run records its effective configuration, seeds, environment, GPU partition,
 
 For a same-machine deterministic rerun, reuse the recorded `--seed` and `--measurement-seed` and add `--strict-deterministic`. Bitwise equality is not guaranteed across different software versions, GPU models, or GPU partitions.
 
+The paper presets follow the reported configurations, while individual reconstructions may not exactly match the figures shown in the paper.
+
 ## Repository Structure
 
 ```text
 PDPS/
 ├── pdps.py, dps.py, tv.py      # Method entry points
+├── data/
+│   └── label/                  # Clean reference images used to generate measurements and compute metrics
 ├── configs/                    # Paper presets and custom configurations
 └── src/
     ├── cli.py                  # Shared command-line interface
