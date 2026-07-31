@@ -93,9 +93,6 @@ Each run records its effective configuration, seeds, environment, GPU partition,
 
 For a same-machine deterministic rerun, reuse the recorded `--seed` and `--measurement-seed` and add `--strict-deterministic`. Bitwise equality is not guaranteed across different software versions, GPU models, or GPU partitions.
 
-> [!NOTE]
-> `--paper` selects the released cases and parameter presets, but it does not promise pixel-identical regeneration of the frozen historical PDPS figures and table entries. Their original sampling seeds were not retained, and the current implementation executes the corrected complete `N_rev` reverse grid. The TV preset is the corrected proximal-gradient baseline rather than a bit-for-bit replay of the legacy TV script.
-
 ## Repository Structure
 
 ```text
